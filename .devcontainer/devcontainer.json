@@ -1,0 +1,44 @@
+{
+  "name": "Barstar Backend",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11-bookworm",
+  "workspaceFolder": "/workspaces/backend",
+  "runArgs": [
+    "--network=host"
+  ],
+  "mounts": [
+    "source=barstar-backend-pip,target=/home/vscode/.cache/pip,type=volume",
+    "source=barstar-backend-uv,target=/home/vscode/.cache/uv,type=volume"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11",
+      "installJupyterlab": false
+    },
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "forwardPorts": [
+    8000,
+    5432,
+    6379
+  ],
+  "postCreateCommand": "python -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && pip install -e '.[dev]'",
+  "remoteUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/workspaces/backend/.venv/bin/python",
+        "editor.formatOnSave": true,
+        "python.analysis.typeCheckingMode": "strict",
+        "files.eol": "\n"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker",
+        "charliermarsh.ruff",
+        "ms-python.black-formatter"
+      ]
+    }
+  }
+}
