@@ -30,3 +30,29 @@ migrations-up:
 
 migrations-down:
 	$(BIN)/alembic downgrade -1
+
+create-table:
+	@if [ -z "$(name)" ]; then \
+		echo "Usage: make create-table name=<table_name>"; \
+		echo "Example: make create-table name=venue"; \
+		exit 1; \
+	fi
+	$(BIN)/python scripts/create_table.py $(name)
+
+db-init:
+	$(BIN)/alembic downgrade base
+	$(BIN)/alembic upgrade head
+	$(BIN)/alembic revision --autogenerate -m "initial schema"
+
+db-reset:
+	$(BIN)/alembic downgrade base
+	$(BIN)/alembic upgrade head
+
+db-seed:
+	$(BIN)/python scripts/seed_db.py
+
+db-seed-clear:
+	$(BIN)/python scripts/seed_db.py --clear
+
+db-refresh: db-reset db-seed
+	@echo "✅ Database refreshed with seed data"

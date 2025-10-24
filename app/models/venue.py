@@ -10,16 +10,19 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.db.base import Base
 
 
-class User(Base):
-    """Example user model that can be extended with profile attributes."""
+class Venue(Base):
+    """TODO: Add model description."""
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
     )
-    email: Mapped[str] = mapped_column(unique=True, nullable=False, index=True)
-    full_name: Mapped[str | None] = mapped_column(nullable=True)
+    # TODO: Add your columns here
+    # Example:
+    # name: Mapped[str] = mapped_column(nullable=False)
+    # description: Mapped[str | None] = mapped_column(nullable=True)
+    
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
@@ -31,7 +34,3 @@ class User(Base):
         server_default=func.now(),
         onupdate=func.now(),
     )
-    points: Mapped[int] = mapped_column(
-        default=0, 
-        nullable=False
-        )

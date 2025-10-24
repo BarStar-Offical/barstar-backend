@@ -23,6 +23,7 @@ dependencies = [
   "sqlalchemy>=2.0",
   "structlog>=24.1",
   "uvicorn[standard]>=0.29",
+  "pydantic[email]",
 ]
 
 [project.optional-dependencies]
