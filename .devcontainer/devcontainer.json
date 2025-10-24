@@ -22,7 +22,8 @@
     5432,
     6379
   ],
-  "postCreateCommand": "python -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && pip install -e '.[dev]'",
+  //"postCreateCommand": "python -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && pip install -e '.[dev]'",
+  "postAttachCommand": "./.devcontainer/post-attach.sh",
   "remoteUser": "vscode",
   "customizations": {
     "vscode": {
@@ -33,11 +34,11 @@
         "files.eol": "\n"
       },
       "extensions": [
-        "ms-python.python",
-        "ms-python.vscode-pylance",
+        "donjayamanne.python-extension-pack",
         "ms-azuretools.vscode-docker",
-        "charliermarsh.ruff",
-        "ms-python.black-formatter"
+        "ms-python.black-formatter",
+        "openai.chatgpt",
+        "Trunk.io"
       ]
     }
   }
