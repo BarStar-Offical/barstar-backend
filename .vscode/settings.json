@@ -7,4 +7,25 @@
     },
   },
   "isort.args": ["--profile", "black"],
+  "pgsql.connections": [
+        {
+            "id": "F609494E-DC3F-420B-99D2-A02831DF99E0",
+            "groupId": "0D6E1EAE-D5C7-4F20-8041-B45844498DB8",
+            "authenticationType": "SqlLogin",
+            "connectTimeout": 15,
+            "applicationName": "vscode-pgsql",
+            "clientEncoding": "utf8",
+            "sslmode": "prefer",
+            "savePassword": true,
+            "server": "localhost",
+            "user": "postgres",
+            "password": "",
+            "port": "5432",
+            "database": "barstar",
+            "profileName": "postgres",
+            "sshPassword": "",
+            "displayName": "barstar",
+            "expiresOn": 0
+        }
+    ]
 }

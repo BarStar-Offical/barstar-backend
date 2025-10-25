@@ -21,21 +21,18 @@ from sqlalchemy import Column, Table, delete, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import sqltypes
-
-from tqdm.auto import tqdm as _tqdm 
-
-
+from tqdm.auto import tqdm as _tqdm
 
 
 class _ProgressProtocol(Protocol):
-    def update(self, n: int = 1) -> None:
-        ...
+    def update(self, n: int = 1) -> None: ...
 
-    def set_postfix(self, ordered_dict: dict[str, object] | None = None, refresh: bool | None = None) -> None:
-        ...
+    def set_postfix(
+        self, ordered_dict: dict[str, object] | None = None, refresh: bool | None = None
+    ) -> None: ...
 
-    def close(self) -> None:
-        ...
+    def close(self) -> None: ...
+
 
 from app.db.base import Base
 from app.db.session import SessionLocal
