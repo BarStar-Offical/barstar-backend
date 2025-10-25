@@ -18,11 +18,6 @@ class Venues(Base):
         primary_key=True,
         default=uuid.uuid4,
     )
-    # TODO: Add your columns here
-    # Example:
-    # name: Mapped[str] = mapped_column(nullable=False)
-    # description: Mapped[str | None] = mapped_column(nullable=True)
-
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
