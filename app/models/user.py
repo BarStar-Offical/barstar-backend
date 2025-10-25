@@ -5,7 +5,7 @@ from datetime import datetime
 
 from sqlalchemy import DateTime, func
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 
@@ -32,6 +32,12 @@ class User(Base):
         onupdate=func.now(),
     )
     points: Mapped[int] = mapped_column(
-        default=0, 
-        nullable=False
-        )
+        default=0,
+        nullable=False,
+    )
+    locations: Mapped[list["UserLocation"]] = relationship(
+        "UserLocation",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
