@@ -10,7 +10,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.db.base import Base
 
 
-class Venue(Base):
+class Venues(Base):
     """TODO: Add model description."""
 
     id: Mapped[uuid.UUID] = mapped_column(
@@ -22,7 +22,7 @@ class Venue(Base):
     # Example:
     # name: Mapped[str] = mapped_column(nullable=False)
     # description: Mapped[str | None] = mapped_column(nullable=True)
-    
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

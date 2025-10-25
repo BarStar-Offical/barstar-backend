@@ -13,7 +13,7 @@ from sqlalchemy.pool import StaticPool
 from app.api import deps
 from app.db.base import Base
 from app.main import create_app
-from app.models import User
+from app.models import Users
 
 
 @pytest.fixture()
@@ -65,14 +65,16 @@ def app_session() -> Generator[tuple[TestClient, sessionmaker[Session]], None, N
 
 def _create_user(session_factory: sessionmaker[Session]) -> UUID:
     with session_factory() as session:
-        user = User(email="test@example.com")
+        user = Users(email="test@example.com")
         session.add(user)
         session.commit()
         session.refresh(user)
         return user.id
 
 
-def test_record_and_fetch_latest_location(app_session: tuple[TestClient, sessionmaker[Session]]) -> None:
+def test_record_and_fetch_latest_location(
+    app_session: tuple[TestClient, sessionmaker[Session]],
+) -> None:
     client, session_factory = app_session
     user_id = _create_user(session_factory)
 
@@ -98,7 +100,9 @@ def test_record_and_fetch_latest_location(app_session: tuple[TestClient, session
     assert latest["captured_at"] == body["captured_at"]
 
 
-def test_get_latest_location_returns_404_when_missing(app_session: tuple[TestClient, sessionmaker[Session]]) -> None:
+def test_get_latest_location_returns_404_when_missing(
+    app_session: tuple[TestClient, sessionmaker[Session]],
+) -> None:
     client, session_factory = app_session
     user_id = _create_user(session_factory)
 

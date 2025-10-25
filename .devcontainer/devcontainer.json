@@ -22,7 +22,8 @@
     6379
   ],
   "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/postCreate.sh",
-  "remoteUser": "vscode",
+  "postAttachCommand": "source ${containerWorkspaceFolder}/.venv/bin/activate",
+  "remoteUsers": "vscode",
   "customizations": {
     "vscode": {
       "settings": {
@@ -38,7 +39,8 @@
         "openai.chatgpt",
         "Trunk.io",
         "ms-python.isort",
-        "noorashuvo.simple-coding-time-tracker"
+        "noorashuvo.simple-coding-time-tracker",
+        "ms-ossdata.vscode-pgsql"
       ]
     }
   }

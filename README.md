@@ -103,7 +103,7 @@ Once the app is running and migrations applied:
 curl http://localhost:8000/api/v1/health
 curl -X POST http://localhost:8000/api/v1/users \
   -H "Content-Type: application/json" \
-  -d '{"email":"demo@example.com","full_name":"Demo User"}'
+  -d '{"email":"demo@example.com","full_name":"Demo Users"}'
 ```
 
 The second call should respond with the created user and a UUID. Check Redis (`redis-cli LRANGE tasks 0 -1`) to see the enqueued background event.

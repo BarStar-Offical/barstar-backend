@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Reset alembic version table."""
 from sqlalchemy import text
 from app.db.session import engine

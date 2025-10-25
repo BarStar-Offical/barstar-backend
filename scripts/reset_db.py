@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Drop all tables and reset the database."""
 from sqlalchemy import text
 from app.db.session import engine

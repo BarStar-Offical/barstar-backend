@@ -1,21 +1,24 @@
 from __future__ import annotations
 
+from typing import Optional
 from datetime import datetime
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr
 
 
-class UserBase(BaseModel):
+class UsersBase(BaseModel):
     email: EmailStr
-    full_name: str | None = None
+    full_name: str
+    oauth_provider: str
+    oauth_provider_id: str
 
 
-class UserCreate(UserBase):
+class UsersCreate(UsersBase):
     """Payload for creating users."""
 
 
-class UserRead(UserBase):
+class UsersRead(UsersBase):
     """Representation returned via API."""
 
     model_config = ConfigDict(from_attributes=True)

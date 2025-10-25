@@ -34,11 +34,11 @@ To add new endpoints:
 ```python
 from fastapi import APIRouter, Depends
 from app.api.deps import get_db
-from app.schemas.user import User
+from app.schemas.user import Users
 
 router = APIRouter()
 
-@router.get("/users/{user_id}", response_model=User)
+@router.get("/users/{user_id}", response_model=Users)
 def get_user(user_id: int, db=Depends(get_db)):
     # ...implementation...
     pass

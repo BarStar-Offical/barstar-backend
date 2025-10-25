@@ -1,15 +1,16 @@
 """Pydantic schemas."""
 
-from app.schemas.location import UserLocationCreate, UserLocationRead
-from app.schemas.user import UserCreate, UserRead
-from app.schemas.venue import Venue, VenueCreate, VenueUpdate
+from app.schemas.users import UsersCreate, UsersRead
+from app.schemas.venues import Venues, VenuesCreate, VenuesUpdate
+from app.schemas.friends import Friends, FriendsCreate, FriendsUpdate
 
 __all__ = [
-    "UserCreate",
-    "UserRead",
-    "UserLocationCreate",
-    "UserLocationRead",
-    "Venue",
-    "VenueCreate",
-    "VenueUpdate",
+    "UsersCreate",
+    "UsersRead",
+    "Venues",
+    "VenuesCreate",
+    "VenuesUpdate",
+    "Friends",
+    "FriendsCreate",
+    "FriendsUpdate",
 ]

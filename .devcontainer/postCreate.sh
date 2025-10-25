@@ -9,9 +9,7 @@ cd "$REPO_ROOT"
 
 if [ ! -d "$VENV_PATH" ]; then
 	echo "Creating Python virtual environment at $VENV_PATH..."
-	python3 -m venv "$VENV_PATH"
-	"$VENV_PATH/bin/pip" install --upgrade pip setuptools wheel
-	"$VENV_PATH/bin/pip" install -e ".[dev]"
+	make install-dev
 else
 	echo "Using existing virtual environment at $VENV_PATH."
 fi
