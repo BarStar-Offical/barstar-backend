@@ -1,7 +1,6 @@
 {
   "name": "Barstar Backend",
   "image": "mcr.microsoft.com/devcontainers/python:3.11-bookworm",
-  "workspaceFolder": "/workspaces/backend",
   "runArgs": [
     "--network=host"
   ],
@@ -22,13 +21,12 @@
     5432,
     6379
   ],
-  //"postCreateCommand": "python -m venv .venv && . .venv/bin/activate && pip install --upgrade pip && pip install -e '.[dev]'",
-  "postAttachCommand": "./.devcontainer/post-attach.sh",
+  "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/postCreate.sh",
   "remoteUser": "vscode",
   "customizations": {
     "vscode": {
       "settings": {
-        "python.defaultInterpreterPath": "/workspaces/backend/.venv/bin/python",
+        "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
         "editor.formatOnSave": true,
         "python.analysis.typeCheckingMode": "strict",
         "files.eol": "\n"
