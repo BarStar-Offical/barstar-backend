@@ -11,13 +11,22 @@ class UsersBase(BaseModel):
     full_name: str
     oauth_provider: str
     oauth_provider_id: str
+    points: int = 0
 
 
 class UsersCreate(UsersBase):
     """Payload for creating users."""
-    
-class UsersUpdate(UsersBase):
+
+
+class UsersUpdate(BaseModel):
     """Payload for updating users."""
+
+    email: EmailStr | None = None
+    full_name: str | None = None
+    oauth_provider: str | None = None
+    oauth_provider_id: str | None = None
+    points: int | None = None
+
 
 class UsersRead(UsersBase):
     """Representation returned via API."""
@@ -27,5 +36,3 @@ class UsersRead(UsersBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
-    points: int
-    friends: list[UsersRead] = []

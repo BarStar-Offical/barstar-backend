@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-from datetime import timezone
 from typing import Any
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select, text
+from fastapi import APIRouter, Depends, HTTPException, Response, status
+from sqlalchemy import or_, select, text
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db, get_task_queue
 from app.models import Users
-from app.schemas import UsersCreate, UsersRead
+from app.schemas import UsersCreate, UsersRead, UsersUpdate
 from app.services import TaskQueue
 
 router = APIRouter(prefix="/api/v1")
@@ -43,16 +42,29 @@ def create_user(
 ) -> UsersRead:
     """Create a new user and enqueue a lightweight background event."""
 
-    existing_user = db.execute(
-        select(Users).where(Users.email == payload.email)
+    conflict = db.execute(
+        select(Users)
+        .where(
+            or_(
+                Users.email == payload.email,
+                Users.oauth_provider_id == payload.oauth_provider_id,
+            )
+        )
+        .limit(1)
     ).scalar_one_or_none()
-    if existing_user:
+    if conflict:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="user_already_exists",
         )
 
-    user = Users(email=payload.email, full_name=payload.full_name)
+    user = Users(
+        email=payload.email,
+        full_name=payload.full_name,
+        oauth_provider=payload.oauth_provider,
+        oauth_provider_id=payload.oauth_provider_id,
+        points=payload.points,
+    )
     db.add(user)
     db.commit()
     db.refresh(user)
@@ -72,6 +84,102 @@ def list_users(db: Session = Depends(get_db)) -> list[UsersRead]:
     result = db.execute(select(Users).order_by(Users.created_at.desc()))
     users = result.scalars().all()
     return [UsersRead.model_validate(user) for user in users]
+
+
+@router.get(
+    "/users/{user_id}",
+    response_model=UsersRead,
+    tags=["users"],
+)
+def get_user(user_id: UUID, db: Session = Depends(get_db)) -> UsersRead:
+    """Retrieve a single user by identifier."""
+
+    user = _get_user_or_404(db, user_id)
+    return UsersRead.model_validate(user)
+
+
+@router.put(
+    "/users/{user_id}",
+    response_model=UsersRead,
+    tags=["users"],
+)
+def update_user(
+    user_id: UUID,
+    payload: UsersUpdate,
+    db: Session = Depends(get_db),
+    queue: TaskQueue = Depends(get_task_queue),
+) -> UsersRead:
+    """Update an existing user."""
+
+    user = _get_user_or_404(db, user_id)
+    updates = payload.model_dump(exclude_unset=True)
+    if not updates:
+        return UsersRead.model_validate(user)
+
+    if "email" in updates:
+        email_conflict = db.execute(
+            select(Users).where(Users.email == updates["email"], Users.id != user_id).limit(1)
+        ).scalar_one_or_none()
+        if email_conflict:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="email_already_exists",
+            )
+
+    if "oauth_provider_id" in updates:
+        provider_conflict = db.execute(
+            select(Users)
+            .where(Users.oauth_provider_id == updates["oauth_provider_id"], Users.id != user_id)
+            .limit(1)
+        ).scalar_one_or_none()
+        if provider_conflict:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="oauth_provider_id_already_exists",
+            )
+
+    for field, value in updates.items():
+        setattr(user, field, value)
+
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    queue.enqueue("user.updated", {"id": str(user.id)})
+    return UsersRead.model_validate(user)
+
+
+@router.delete(
+    "/users/{user_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["users"],
+)
+def delete_user(
+    user_id: UUID,
+    db: Session = Depends(get_db),
+    queue: TaskQueue = Depends(get_task_queue),
+) -> Response:
+    """Delete a user."""
+
+    user = _get_user_or_404(db, user_id)
+
+    user_identifier = str(user.id)
+
+    db.delete(user)
+    db.commit()
+
+    queue.enqueue("user.deleted", {"id": user_identifier})
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+def _get_user_or_404(db: Session, user_id: UUID) -> Users:
+    user = db.get(Users, user_id)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="user_not_found",
+        )
+    return user
 
 
 if __name__ == "__main__":

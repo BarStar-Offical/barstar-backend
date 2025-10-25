@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Generator
 
-from collections.abc import Generator
+from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
 from app.db.session import get_db_session
@@ -11,7 +11,7 @@ from app.services.task_queue import TaskQueue
 settings = get_settings()
 
 
-def get_db() -> Generator:
+def get_db() -> Generator[Session, None, None]:
     """FastAPI dependency that yields a synchronous SQLAlchemy session."""
 
     yield from get_db_session()
