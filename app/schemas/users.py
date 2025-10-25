@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
 from datetime import datetime
 from uuid import UUID
 
@@ -16,7 +15,9 @@ class UsersBase(BaseModel):
 
 class UsersCreate(UsersBase):
     """Payload for creating users."""
-
+    
+class UsersUpdate(UsersBase):
+    """Payload for updating users."""
 
 class UsersRead(UsersBase):
     """Representation returned via API."""
@@ -27,3 +28,4 @@ class UsersRead(UsersBase):
     created_at: datetime
     updated_at: datetime
     points: int
+    friends: list[UsersRead] = []

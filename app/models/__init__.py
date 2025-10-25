@@ -2,7 +2,8 @@
 
 from app.models.users import Users
 from app.models.venues import Venues
-from app.models.friends import Friends
+from app.models.followers import Followers
 
-__all__ = ["Users", "Venues", "Friends"]
+__all__ = ["Users", "Venues", "Followers"]
+
 

@@ -14,7 +14,7 @@ import random
 import sys
 import uuid
 from datetime import datetime, timedelta, timezone
-from typing import Any, Protocol, cast
+from typing import Any, cast
 
 from faker import Faker
 from sqlalchemy import Column, Table, delete, select
@@ -22,16 +22,6 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import sqltypes
 from tqdm.auto import tqdm as _tqdm
-
-
-class _ProgressProtocol(Protocol):
-    def update(self, n: int = 1) -> None: ...
-
-    def set_postfix(
-        self, ordered_dict: dict[str, object] | None = None, refresh: bool | None = None
-    ) -> None: ...
-
-    def close(self) -> None: ...
 
 
 from app.db.base import Base
@@ -148,16 +138,13 @@ class ReflectionSeeder:
                 table = self.tables[table_name]
                 created = 0
                 skipped = 0
-                progress: _ProgressProtocol | None = None
-                progress = cast(
-                    _ProgressProtocol,
-                    _tqdm(
+                progress = _tqdm(
                         total=self.number_of_records,
                         desc=f"Seeding {model.__name__}",
                         unit="record",
                         leave=False,
-                    ),
-                )
+                    )
+                
                 for _ in range(self.number_of_records):
                     success = False
                     for _attempt in range(self.max_attempts):
@@ -170,11 +157,10 @@ class ReflectionSeeder:
                             break
                     if not success:
                         skipped += 1
-                    if progress is not None:
-                        progress.update(1)
-                        progress.set_postfix({"created": created, "skipped": skipped})
-                if progress is not None:
-                    progress.close()
+                    
+                    progress.update(1)
+                    progress.set_postfix({"created": created, "skipped": skipped}) # type: ignore
+                progress.close()
                 print(f"  ↳ {model.__name__}: created {created}, skipped {skipped}")
             self.session = None
 
@@ -385,12 +371,6 @@ class ReflectionSeeder:
 
 def _collect_requested_models(args: argparse.Namespace) -> list[str] | None:
     explicit = set(args.models or [])
-    if args.users:
-        explicit.add("Users")
-    if args.venues:
-        explicit.add("Venues")
-    if args.friends:
-        explicit.add("Friends")
     return sorted(explicit) if explicit else None
 
 
@@ -412,11 +392,6 @@ def main() -> int:
         "--models",
         nargs="+",
         help="Specific model class or table names to seed (defaults to all)",
-    )
-    parser.add_argument("--users", action="store_true", help="Convenience alias for Users model")
-    parser.add_argument("--venues", action="store_true", help="Convenience alias for Venues model")
-    parser.add_argument(
-        "--friends", action="store_true", help="Convenience alias for Friends model"
     )
     args = parser.parse_args()
 

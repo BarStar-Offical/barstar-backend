@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from typing import Optional
-
 from sqlalchemy import DateTime, func
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
+from app.models.followers import Followers
 
 
 class Users(Base):
@@ -34,4 +33,22 @@ class Users(Base):
     )
     points: Mapped[int] = mapped_column(
         default=0,
+    )
+    
+    # People this user follows (A → B)
+    following: Mapped[list["Users"]] = relationship(
+        "Users",
+        secondary="followers",
+        primaryjoin=id == Followers.follower_id,
+        secondaryjoin=id == Followers.followed_id,
+        back_populates="followers",
+    )
+
+    # People who follow this user (B ← A)
+    followers: Mapped[list["Users"]] = relationship(
+        "Users",
+        secondary="followers",
+        primaryjoin=id == Followers.followed_id,
+        secondaryjoin=id == Followers.follower_id,
+        back_populates="following",
     )

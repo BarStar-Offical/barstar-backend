@@ -2,7 +2,7 @@
 
 from app.schemas.users import UsersCreate, UsersRead
 from app.schemas.venues import Venues, VenuesCreate, VenuesUpdate
-from app.schemas.friends import Friends, FriendsCreate, FriendsUpdate
+from app.schemas.followers import Followers, FollowersCreate, FollowersUpdate
 
 __all__ = [
     "UsersCreate",
@@ -10,7 +10,7 @@ __all__ = [
     "Venues",
     "VenuesCreate",
     "VenuesUpdate",
-    "Friends",
-    "FriendsCreate",
-    "FriendsUpdate",
+    "Followers",
+    "FollowersCreate",
+    "FollowersUpdate",
 ]
