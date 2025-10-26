@@ -1,9 +1,9 @@
 """SQLAlchemy ORM models."""
 
+from app.models.followers import Followers
 from app.models.users import Users
 from app.models.venues import Venues
-from app.models.followers import Followers
 
-__all__ = ["Users", "Venues", "Followers"]
+__all__ = ["Followers", "Users", "Venues"]
 
 

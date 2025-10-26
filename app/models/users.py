@@ -40,7 +40,7 @@ class Users(Base):
     )
 
     # People this user follows (A → B)
-    following: Mapped[list["Users"]] = relationship(
+    following: Mapped[list[Users]] = relationship(
         "Users",
         secondary="followers",
         primaryjoin=id == Followers.follower_id,
@@ -49,7 +49,7 @@ class Users(Base):
     )
 
     # People who follow this user (B ← A)
-    followers: Mapped[list["Users"]] = relationship(
+    followers: Mapped[list[Users]] = relationship(
         "Users",
         secondary="followers",
         primaryjoin=id == Followers.followed_id,

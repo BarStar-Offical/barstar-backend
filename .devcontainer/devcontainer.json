@@ -22,6 +22,7 @@
     6379
   ],
   "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/postCreate.sh",
+  "postAttachCommand": "${containerWorkspaceFolder}/.devcontainer/postAttach.sh",
   "remoteUsers": "vscode",
   "customizations": {
     "vscode": {
@@ -39,7 +40,8 @@
         "Trunk.io",
         "ms-python.isort",
         "noorashuvo.simple-coding-time-tracker",
-        "ms-ossdata.vscode-pgsql"
+        "ms-ossdata.vscode-pgsql",
+        "mhutchie.git-graph"
       ]
     }
   }
