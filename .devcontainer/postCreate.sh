@@ -5,14 +5,12 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 VENV_PATH="$REPO_ROOT/.venv"
 ACTIVATE_SNIPPET="source $VENV_PATH/bin/activate"
 
-cd "$REPO_ROOT"
+# Ensure caches exist and are writable by vscode
+mkdir -p /home/vscode/.cache/pip /home/vscode/.cache/uv
+sudo chown -R vscode:vscode /home/vscode/.cache
 
-if [ ! -d "$VENV_PATH" ]; then
-	echo "Creating Python virtual environment at $VENV_PATH..."
-	make install-dev
-else
-	echo "Using existing virtual environment at $VENV_PATH."
-fi
+cd "$REPO_ROOT"
+make install-dev
 
 # Auto-activate the environment for future terminals.
 if ! grep -Fq "$ACTIVATE_SNIPPET" /home/vscode/.bashrc; then
@@ -25,6 +23,6 @@ if ! grep -Fq "$ACTIVATE_SNIPPET" /home/vscode/.bashrc; then
 fi
 
 echo "Ensuring docker compose services are running..."
-cd "$REPO_ROOT/deploy"
+cd "$REPO_ROOT"
 docker compose up --build -d
 echo "Docker compose stack is up (detached). Use 'docker compose logs -f' to follow logs."

@@ -22,7 +22,6 @@
     6379
   ],
   "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/postCreate.sh",
-  "postAttachCommand": "source ${containerWorkspaceFolder}/.venv/bin/activate",
   "remoteUsers": "vscode",
   "customizations": {
     "vscode": {
