@@ -5,7 +5,7 @@ REPO_ROOT="$(git rev-parse --show-toplevel || pwd)"
 VENV="${REPO_ROOT}/.venv"
 PY="${VENV}/bin/python"
 
-if [[ ! -x "${PY}" ]]; then
+if [[ ! -x ${PY} ]]; then
 	echo "❌ Virtualenv not found at ${PY}. Run: make install-dev"
 	exit 1
 fi
@@ -36,7 +36,7 @@ if [[ ${ans} =~ ^[Yy]$ ]]; then
 		fi
 		sleep 2
 	done
-	if [[ "${pg_ready}" != "true" ]]; then
+	if [[ ${pg_ready} != "true" ]]; then
 		echo "❌ PostgreSQL did not become ready in time. Showing recent logs:"
 		docker compose logs --tail 50 db || true
 		exit 1
@@ -85,6 +85,6 @@ PY
 		pkill -f "uvicorn .*app\.main" || true
 	fi
 
-		echo "Starting Barstar backend server..."
-		exec "$PY" -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+	echo "Starting Barstar backend server..."
+	exec "$PY" -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 fi
