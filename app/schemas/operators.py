@@ -1,0 +1,50 @@
+from __future__ import annotations
+
+import enum
+from datetime import datetime
+from uuid import UUID
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+
+
+class OperatorRole(str, enum.Enum):
+    """Roles that an operator can perform for a venue."""
+
+    OWNER = "owner"
+    STAFF = "staff"
+
+
+class OperatorsBase(BaseModel):
+    """Shared properties across operator schemas."""
+
+    role: OperatorRole = OperatorRole.STAFF
+    email: EmailStr
+    full_name: str
+    phone_number: str | None = None
+    venue_ids: list[UUID] = Field(default_factory=list)
+    is_active: bool = True
+
+
+class OperatorsCreate(OperatorsBase):
+    """Payload accepted when creating an operator."""
+
+
+class OperatorsUpdate(BaseModel):
+    """Payload accepted when updating an operator."""
+
+    role: OperatorRole | None = None
+    email: EmailStr | None = None
+    full_name: str | None = None
+    phone_number: str | None = None
+    venue_ids: list[UUID] | None = None
+    is_active: bool | None = None
+
+
+class OperatorsRead(OperatorsBase):
+    """Representation returned from API responses."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    created_at: datetime
+    updated_at: datetime

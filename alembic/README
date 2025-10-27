@@ -1,5 +1,0 @@
-# Starting from scratch in new devcontainers
-
-alembic revision --autogenerate -m "initial schema"
-make db-seed
-alembic upgrade head

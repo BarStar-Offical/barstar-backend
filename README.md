@@ -7,12 +7,12 @@ FastAPI service backed by PostgreSQL, Redis, and Alembic migrations. The goal is
 - SQLAlchemy 2.0 ORM with PostgreSQL
 - Alembic migrations
 - Redis-backed task queue stub
-- Hatch (PEP 621) project metadata with plain `pip` install
+- Hatch (PEP 621) project metadata managed with `uv`
 - Tooling: Ruff, Black, MyPy, and Pytest
 
 ## Prerequisites
 - Python 3.11
-- `pip` and `virtualenv` (or `python -m venv`)
+- [`uv`](https://docs.astral.sh/uv/latest/) (installs and manages the virtual environment for you)
 - Docker + Docker Compose v2 (for local infrastructure)
 
 ## 5‑Minute Local Setup
@@ -23,10 +23,8 @@ FastAPI service backed by PostgreSQL, Redis, and Alembic migrations. The goal is
    ```
 2. Create a virtual environment and install dependencies:
    ```bash
-   python3.11 -m venv .venv
+   uv sync --group dev
    source .venv/bin/activate
-   pip install --upgrade pip
-   pip install -e ".[dev]"
    ```
    The provided `Makefile` wraps the above as `make install-dev`.
 3. Start backing services and run the API:

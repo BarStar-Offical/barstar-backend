@@ -54,7 +54,7 @@ if [[ ${ans} =~ ^[Yy]$ ]]; then
 	REDIS_URL_VALUE=$(grep '^REDIS_URL=' .env | cut -d '=' -f2- || true)
 	HOST_DATABASE_URL="postgresql+psycopg://${POSTGRES_USER_VALUE}:${POSTGRES_PASSWORD_VALUE}@localhost:5432/${POSTGRES_DB_VALUE}"
 	HOST_REDIS_URL=$(
-		REDIS_URL_VALUE="${REDIS_URL_VALUE:-redis://redis:6379/0}" python - <<'PY'
+		REDIS_URL_VALUE="${REDIS_URL_VALUE:-redis://localhost:6379/0}" python - <<'PY'
 from urllib.parse import urlparse, urlunparse
 import os
 

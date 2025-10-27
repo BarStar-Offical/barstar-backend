@@ -13,19 +13,17 @@ import importlib
 import random
 import sys
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any, cast
 
+from app.db.base import Base
+from app.db.session import SessionLocal
 from faker import Faker
 from sqlalchemy import Column, Table, delete, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import sqltypes
 from tqdm.auto import tqdm as _tqdm
-
-
-from app.db.base import Base
-from app.db.session import SessionLocal
 
 importlib.import_module("app.models")
 
@@ -69,20 +67,20 @@ class RandomData:
     def datetime(self) -> datetime:
         if self._faker is not None:
             return self._faker.date_time_between(
-                start_date="-2y", end_date="now", tzinfo=timezone.utc
+                start_date="-2y", end_date="now", tzinfo=UTC
             )
-        return datetime.now(timezone.utc) - timedelta(
+        return datetime.now(UTC) - timedelta(
             days=random.randint(0, 730), seconds=random.randint(0, 86_400)
         )
 
-    def integer(self, min_value: int = 0, max_value: int = 1_000) -> int:
+    def integer(self, min_value: int = 0, max_value: int = 1_000_000_000) -> int:
         if self._faker is not None:
             return self._faker.random_int(min=min_value, max=max_value)
         return random.randint(min_value, max_value)
 
     def float(self, min_value: float = 0.0, max_value: float = 100.0) -> float:
         if self._faker is not None:
-            return self._faker.pyfloat(min_value=min_value, max_value=max_value, positive=True)
+            return self._faker.pyfloat(min_value=min_value, max_value=max_value)
         return random.uniform(min_value, max_value)
 
     def boolean(self) -> bool:

@@ -3,13 +3,14 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
+from pydantic import EmailStr
 from sqlalchemy import DateTime, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
-from app.models.followers import Followers
 
+from app.models.followers import Followers
 
 class Users(Base):
     """Users model that can be extended with profile attributes."""
@@ -36,7 +37,6 @@ class Users(Base):
         onupdate=func.now(),
     )
     points: Mapped[int] = mapped_column(
-        default=0,
     )
 
     # People this user follows (A → B)

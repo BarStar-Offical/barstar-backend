@@ -12,9 +12,9 @@ from app.db.base import Base
 
 
 class StatusEnum(enum.Enum):
-    PENDING = "pending"
-    ACCEPTED = "accepted"
-    REJECTED = "rejected"
+    PENDING = "PENDING"
+    ACCEPTED = "ACCEPTED"
+    REJECTED = "REJECTED"
 
 class Followers(Base):
     """TODO: Add model description."""
@@ -33,7 +33,7 @@ class Followers(Base):
         onupdate=func.now(),
     )
     status: Mapped[StatusEnum] = mapped_column(
-        default=StatusEnum.PENDING
+        default=StatusEnum.PENDING,
     )
     follower_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), 
