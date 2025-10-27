@@ -8,7 +8,17 @@ install:
 	$(UV) sync --locked
 
 install-dev:
-	$(UV) sync --locked --group dev
+	@# Check for lock file
+	@if [ -f uv.lock ]; then \
+		uv sync --locked --extra dev; \
+	else \
+		read -p "No uv.lock file found. Do you want to install Python dependencies anyways? (y/n): " answer; \
+		if [ "$$answer" = "y" ]; then \
+			uv sync --extra dev; \
+		else \
+			echo "Skipped installing Python dependencies."; \
+		fi; \
+	fi
 
 fmt:
 	$(BIN)/ruff check --select I --fix .

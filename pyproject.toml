@@ -7,10 +7,10 @@ name = "barstar-backend"
 version = "0.1.0"
 description = "Barstar backend service."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.14"
 license = { text = "MIT" }
 authors = [
-  { name = "Barstar Team" },
+  { name = "Ryleymcc" },
 ]
 dependencies = [
   "alembic>=1.13",
@@ -25,7 +25,8 @@ dependencies = [
   "uvicorn[standard]>=0.29",
   "pydantic[email]",
   "geoalchemy2>=0.18",
-  "sqlalchemy-citext>=1.8.0"
+  "sqlalchemy-citext>=1.8.0",
+  "psycopg2>=2.9.11",
 ]
 
 [project.optional-dependencies]
@@ -55,7 +56,7 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py314"
 src = ["app", "tests"]
 select = [
   "E",
@@ -70,11 +71,11 @@ unfixable = ["B905"]
 
 [tool.black]
 line-length = 100
-target-version = ["py311"]
+target-version = ["py314"]
 include = "\\.pyi?$"
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.14"
 strict = true
 warn_unreachable = true
 disallow_any_unimported = false

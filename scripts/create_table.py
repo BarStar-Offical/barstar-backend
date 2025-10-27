@@ -99,13 +99,13 @@ def create_model(name: str, base_dir: Path) -> None:
     """Create a new model file."""
     class_name = to_pascal_case(name)
     file_name = to_snake_case(name)
-    
+
     model_path = base_dir / "app" / "models" / f"{file_name}.py"
-    
+
     if model_path.exists():
         print(f"❌ Model already exists: {model_path}")
         sys.exit(1)
-    
+
     model_path.write_text(MODEL_TEMPLATE.format(class_name=class_name))
     print(f"✅ Created model: {model_path}")
 
@@ -114,13 +114,13 @@ def create_schema(name: str, base_dir: Path) -> None:
     """Create a new schema file."""
     class_name = to_pascal_case(name)
     file_name = to_snake_case(name)
-    
+
     schema_path = base_dir / "app" / "schemas" / f"{file_name}.py"
-    
+
     if schema_path.exists():
         print(f"❌ Schema already exists: {schema_path}")
         sys.exit(1)
-    
+
     schema_path.write_text(SCHEMA_TEMPLATE.format(class_name=class_name))
     print(f"✅ Created schema: {schema_path}")
 
@@ -129,7 +129,7 @@ def update_init_files(name: str, base_dir: Path) -> None:
     """Update __init__.py files to export the new model and schema."""
     class_name = to_pascal_case(name)
     file_name = to_snake_case(name)
-    
+
     # Update models/__init__.py
     models_init = base_dir / "app" / "models" / "__init__.py"
     if models_init.exists():
@@ -142,7 +142,7 @@ def update_init_files(name: str, base_dir: Path) -> None:
                 content = import_line
             models_init.write_text(content)
             print(f"✅ Updated: {models_init}")
-    
+
     # Update schemas/__init__.py
     schemas_init = base_dir / "app" / "schemas" / "__init__.py"
     if schemas_init.exists():
@@ -175,13 +175,13 @@ def main():
         action="store_true",
         help="Only create the schema file",
     )
-    
+
     args = parser.parse_args()
-    
+
     base_dir = Path(__file__).parent.parent
-    
+
     print(f"\n📦 Creating boilerplate for: {args.name}\n")
-    
+
     if args.schema_only:
         create_schema(args.name, base_dir)
     elif args.model_only:
@@ -190,12 +190,14 @@ def main():
         create_model(args.name, base_dir)
         create_schema(args.name, base_dir)
         update_init_files(args.name, base_dir)
-    
+
     table_name = to_snake_case(args.name)
     print(f"\n✨ Next steps:")
     print(f"   1. Edit the model in app/models/{table_name}.py")
     print(f"   2. Edit the schema in app/schemas/{table_name}.py")
-    print(f"   3. Generate migration: alembic revision --autogenerate -m 'Create {table_name} table'")
+    print(
+        f"   3. Generate migration: alembic revision --autogenerate -m 'Create {table_name} table'"
+    )
     print(f"   4. Apply migration: alembic upgrade head\n")
 
 

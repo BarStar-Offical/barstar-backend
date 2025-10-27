@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from uuid import UUID, uuid4
 
+from app.models import Followers, Users
+from app.models.followers import StatusEnum
 from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.models import Followers, Users
-from app.models.followers import StatusEnum
 from tests.conftest import APITestContext
 
 

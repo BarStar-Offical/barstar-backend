@@ -4,14 +4,13 @@ from collections.abc import Generator
 from typing import Any
 
 import pytest
+from app.api import deps
+from app.db.base import Base
+from app.main import create_app
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
-
-from app.api import deps
-from app.db.base import Base
-from app.main import create_app
 
 APITestContext = tuple[TestClient, sessionmaker[Session], list[tuple[str, dict[str, Any]]]]
 

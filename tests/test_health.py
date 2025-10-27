@@ -2,10 +2,9 @@ from __future__ import annotations
 
 from typing import Generator
 
-from fastapi.testclient import TestClient
-
 from app.api import deps
 from app.main import create_app
+from fastapi.testclient import TestClient
 
 
 def test_health_endpoint_returns_ok() -> None:

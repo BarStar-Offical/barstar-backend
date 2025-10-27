@@ -16,8 +16,10 @@ class StatusEnum(enum.Enum):
     ACCEPTED = "ACCEPTED"
     REJECTED = "REJECTED"
 
+
 class Followers(Base):
     """TODO: Add model description."""
+
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         primary_key=True,
@@ -36,13 +38,8 @@ class Followers(Base):
         default=StatusEnum.PENDING,
     )
     follower_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), 
-        ForeignKey("users.id", ondelete="CASCADE"), 
-        primary_key=True
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
     )
     followed_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), 
-        ForeignKey("users.id", ondelete="CASCADE"), 
-        primary_key=True
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
     )
-    

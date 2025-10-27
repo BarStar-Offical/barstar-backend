@@ -1,6 +1,6 @@
 {
   "name": "Barstar Backend",
-  "image": "mcr.microsoft.com/devcontainers/python:3.11-bookworm",
+  "image": "mcr.microsoft.com/devcontainers/python:3.14-bookworm",
   "runArgs": [
     "--network=host"
   ],
@@ -42,6 +42,9 @@
         "noorashuvo.simple-coding-time-tracker",
         "ms-ossdata.vscode-pgsql",
         "mhutchie.git-graph",
+        "ms-python.python",
+        "ms-python.debugpy",
+        "fill-labs.dependi"
       ]
     }
   }

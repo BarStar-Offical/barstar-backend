@@ -66,9 +66,7 @@ class RandomData:
 
     def datetime(self) -> datetime:
         if self._faker is not None:
-            return self._faker.date_time_between(
-                start_date="-2y", end_date="now", tzinfo=UTC
-            )
+            return self._faker.date_time_between(start_date="-2y", end_date="now", tzinfo=UTC)
         return datetime.now(UTC) - timedelta(
             days=random.randint(0, 730), seconds=random.randint(0, 86_400)
         )
@@ -137,12 +135,12 @@ class ReflectionSeeder:
                 created = 0
                 skipped = 0
                 progress = _tqdm(
-                        total=self.number_of_records,
-                        desc=f"Seeding {model.__name__}",
-                        unit="record",
-                        leave=False,
-                    )
-                
+                    total=self.number_of_records,
+                    desc=f"Seeding {model.__name__}",
+                    unit="record",
+                    leave=False,
+                )
+
                 for _ in range(self.number_of_records):
                     success = False
                     for _attempt in range(self.max_attempts):
@@ -155,9 +153,9 @@ class ReflectionSeeder:
                             break
                     if not success:
                         skipped += 1
-                    
+
                     progress.update(1)
-                    progress.set_postfix({"created": created, "skipped": skipped}) # type: ignore
+                    progress.set_postfix({"created": created, "skipped": skipped})  # type: ignore
                 progress.close()
                 print(f"  ↳ {model.__name__}: created {created}, skipped {skipped}")
             self.session = None
