@@ -25,6 +25,7 @@ dependencies = [
   "uvicorn[standard]>=0.29",
   "pydantic[email]",
   "geoalchemy2>=0.18",
+  "sqlalchemy-citext>=1.8.0"
 ]
 
 [project.optional-dependencies]

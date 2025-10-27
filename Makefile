@@ -1,18 +1,14 @@
 VENV ?= .venv
-PYTHON ?= python3.11
+UV ?= uv
 BIN := $(VENV)/bin
 
 .PHONY: install install-dev fmt lint test migrations-up migrations-down
 
 install:
-	$(PYTHON) -m venv $(VENV)
-	$(BIN)/pip install --upgrade pip setuptools wheel
-	$(BIN)/pip install .
+	$(UV) sync --locked
 
 install-dev:
-	$(PYTHON) -m venv $(VENV)
-	$(BIN)/pip install --upgrade pip setuptools wheel
-	$(BIN)/pip install -e ".[dev]"
+	$(UV) sync --locked --group dev
 
 fmt:
 	$(BIN)/ruff check --select I --fix .
@@ -40,9 +36,22 @@ create-table:
 	$(BIN)/python scripts/create_table.py $(name)
 
 db-init:
-	$(BIN)/alembic downgrade base
-	$(BIN)/alembic upgrade head
-	$(BIN)/alembic revision --autogenerate -m "initial schema"
+	$(BIN)/alembic downgrade base > /dev/null
+	@if [ -z "$$(find alembic/versions -maxdepth 1 -type f ! -name '*.pyc' -print -quit)" ]; then \
+		echo "✅ Alembic versions directory is empty. Initializing database...🔥"; \
+	else \
+		printf "❌ Nah bro, your alembic versions directory is not empty. You want to fuck your shit up or do you want to clean it up now? "; \
+		read choice; \
+		case $$choice in \
+			[Yy]* ) echo "bet, deleting your alembic shit ..."; rm -rf alembic/versions/*;; \
+			[Nn]* ) echo "Make up your fucking mind!"; exit 1;; \
+			* ) echo "What the fuck does that mean??"; exit 1;; \
+		esac; \
+	fi
+	$(BIN)/alembic upgrade head > /dev/null
+	$(BIN)/alembic revision --autogenerate -m "initial schema" > /dev/null
+	$(BIN)/alembic upgrade head > /dev/null
+	@echo "Shit yeah bud👍! Database initialized with initial schema"
 
 db-reset:
 	$(BIN)/alembic downgrade base

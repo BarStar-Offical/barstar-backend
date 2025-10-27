@@ -9,6 +9,18 @@ ACTIVATE_SNIPPET="source ${VENV_PATH}/bin/activate"
 mkdir -p /home/vscode/.cache/pip /home/vscode/.cache/uv
 sudo chown -R vscode:vscode /home/vscode/.cache
 
+LOCAL_BIN="/home/vscode/.local/bin"
+if [ -d "${LOCAL_BIN}" ]; then
+	export PATH="${LOCAL_BIN}:${PATH}"
+fi
+
+if ! command -v uv >/dev/null 2>&1; then
+	curl -LsSf https://astral.sh/uv/install.sh | sh
+	if [ -d "${LOCAL_BIN}" ]; then
+		export PATH="${LOCAL_BIN}:${PATH}"
+	fi
+fi
+
 cd "${REPO_ROOT}"
 make install-dev
 

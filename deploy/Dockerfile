@@ -6,13 +6,16 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential libpq-dev && \
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential libpq-dev curl && \
     rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/root/.local/bin:${PATH}"
+
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
 COPY pyproject.toml README.md ./
 
-RUN pip install --upgrade pip setuptools wheel && \
-    pip install .
+RUN uv pip install --system .
 
 COPY app ./app
 COPY alembic.ini ./alembic.ini

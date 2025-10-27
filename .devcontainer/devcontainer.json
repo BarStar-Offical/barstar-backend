@@ -41,7 +41,7 @@
         "ms-python.isort",
         "noorashuvo.simple-coding-time-tracker",
         "ms-ossdata.vscode-pgsql",
-        "mhutchie.git-graph"
+        "mhutchie.git-graph",
       ]
     }
   }
