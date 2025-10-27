@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from uuid import UUID, uuid4
 
-from app.models import Followers, Users
-from app.models.followers import StatusEnum
 from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.models import Followers, Users
+from app.models.followers import StatusEnum
 from tests.conftest import APITestContext
 
 
@@ -17,6 +17,7 @@ def _create_user(session_factory: sessionmaker[Session], *, email: str, full_nam
             full_name=full_name,
             oauth_provider="test",
             oauth_provider_id=f"oauth-{uuid4().hex}",
+            points=0,
         )
         session.add(user)
         session.commit()

@@ -5,19 +5,19 @@ BIN := $(VENV)/bin
 .PHONY: install install-dev fmt lint test migrations-up migrations-down
 
 install:
-	$(UV) sync --locked
+	@if [ -f uv.lock ]; then \
+		$(UV) sync --locked; \
+	else \
+		echo "uv.lock not found, generating a fresh lockfile"; \
+		$(UV) sync; \
+	fi
 
 install-dev:
-	@# Check for lock file
 	@if [ -f uv.lock ]; then \
-		uv sync --locked --extra dev; \
+		$(UV) sync --locked --extra dev; \
 	else \
-		read -p "No uv.lock file found. Do you want to install Python dependencies anyways? (y/n): " answer; \
-		if [ "$$answer" = "y" ]; then \
-			uv sync --extra dev; \
-		else \
-			echo "Skipped installing Python dependencies."; \
-		fi; \
+		echo "uv.lock not found, syncing dev dependencies and creating lockfile"; \
+		$(UV) sync --extra dev; \
 	fi
 
 fmt:

@@ -3,6 +3,7 @@
 FastAPI service backed by PostgreSQL, Redis, and Alembic migrations. The goal is to keep the foundation simple while providing enough structure for a productive developer experience.
 
 ## Tech Stack
+
 - FastAPI + Uvicorn for the HTTP API
 - SQLAlchemy 2.0 ORM with PostgreSQL
 - Alembic migrations
@@ -11,11 +12,13 @@ FastAPI service backed by PostgreSQL, Redis, and Alembic migrations. The goal is
 - Tooling: Ruff, Black, MyPy, and Pytest
 
 ## Prerequisites
+
 - Python 3.11
 - [`uv`](https://docs.astral.sh/uv/latest/) (installs and manages the virtual environment for you)
 - Docker + Docker Compose v2 (for local infrastructure)
 
 ## 5‑Minute Local Setup
+
 1. Copy the environment template and adjust as needed:
    ```bash
    cd backend
@@ -28,6 +31,7 @@ FastAPI service backed by PostgreSQL, Redis, and Alembic migrations. The goal is
    ```
    The provided `Makefile` wraps the above as `make install-dev`.
 3. Start backing services and run the API:
+
    ```bash
    # in project root
    docker compose -f deploy/docker-compose.yaml up db redis -d
@@ -36,9 +40,11 @@ FastAPI service backed by PostgreSQL, Redis, and Alembic migrations. The goal is
    alembic upgrade head
    uvicorn app.main:app --reload
    ```
+
 4. Visit http://localhost:8000/docs to explore the automatically generated API docs.
 
 ## Developer Tooling
+
 - `make fmt` → format imports and code with Ruff + Black.
 - `make lint` → static analysis with Ruff and MyPy.
 - `make test` → run the Pytest suite.
@@ -47,14 +53,15 @@ FastAPI service backed by PostgreSQL, Redis, and Alembic migrations. The goal is
 All commands assume the virtual environment located in `.venv`. Update the `Makefile` variables if you standardize on a different path.
 
 ## Database Workflow (Onboarding Cheat Sheet)
+
 1. **Model updates**  
    Edit SQLAlchemy models under `app/models/` and, when needed, update response schemas under `app/schemas/`.
-2. **Generate a migration**  
+2. **Generate a migration**
    ```bash
    alembic revision --autogenerate -m "describe change"
    ```
    Review the generated file in `alembic/versions/` to confirm it matches expectations. Hand-edit when automagic detection misses intent.
-3. **Apply the migration locally**  
+3. **Apply the migration locally**
    ```bash
    alembic upgrade head
    ```
@@ -63,10 +70,13 @@ All commands assume the virtual environment located in `.venv`. Update the `Make
    Commit the migration alongside model/schema updates. In CI/CD or production deploys, run `alembic upgrade head` (the Docker instructions below include a suitable command).
 
 ## Redis Queue Stub
+
 `app/services/task_queue.py` wraps a simple Redis list. It demonstrates how to fan out user events (`user.created`) for future workers. Replace or extend this stub with a real worker process when requirements arrive.
 
 ## Docker & Compose
-- `backend/Dockerfile` builds a production-ready image. It installs the package and exposes Uvicorn on port 8000.
+
+- `backend/Dockerfile` builds a production-ready image. It installs the package, copies the FastAPI app, and ships with `/entrypoint.sh`.
+- `deploy/entrypoint.sh` starts Uvicorn with `--reload` and `WATCHFILES_FORCE_POLLING=true`, so any edits to the bind-mounted source tree trigger a live refresh while the container runs. Set `UVICORN_RELOAD=false` to disable hot reload (e.g. in production).
 - `deploy/docker-compose.yaml` provides a development stack (API + Postgres + Redis). By default it loads environment values from `backend/.env.example`. Create `backend/.env` to override without touching version-controlled files:
   ```bash
   cp backend/.env.example backend/.env
@@ -78,6 +88,7 @@ All commands assume the virtual environment located in `.venv`. Update the `Make
   ```
 
 ## Project Layout
+
 ```
 backend/
 ├── app/
@@ -96,7 +107,9 @@ backend/
 ```
 
 ## API Smoke Test
+
 Once the app is running and migrations applied:
+
 ```bash
 curl http://localhost:8000/api/v1/health
 curl -X POST http://localhost:8000/api/v1/users \

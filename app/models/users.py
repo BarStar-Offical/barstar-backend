@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 from citext import CIText
 from sqlalchemy import DateTime, func
@@ -10,6 +10,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 from app.models.followers import Followers
+
+CIText.cache_ok = True  # type: ignore[attr-defined]
 
 
 class Users(Base):
@@ -29,14 +31,16 @@ class Users(Base):
     )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
         server_default=func.now(),
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
         server_default=func.now(),
         onupdate=func.now(),
     )
-    points: Mapped[int] = mapped_column()
+    points: Mapped[int] = mapped_column(default=0, nullable=False)
 
     # People this user follows (A → B)
     following: Mapped[list[Users]] = relationship(

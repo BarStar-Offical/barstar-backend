@@ -9,10 +9,6 @@
     "source=barstar-backend-uv,target=/home/vscode/.cache/uv,type=volume"
   ],
   "features": {
-    "ghcr.io/devcontainers/features/python:1": {
-      "version": "3.11",
-      "installJupyterlab": false
-    },
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
