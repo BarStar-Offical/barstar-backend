@@ -50,13 +50,18 @@ db-init:
 	@if [ -z "$$(find alembic/versions -maxdepth 1 -type f ! -name '*.pyc' -print -quit)" ]; then \
 		echo "✅ Alembic versions directory is empty. Initializing database...🔥"; \
 	else \
-		printf "❌ Nah bro, your alembic versions directory is not empty. You want to fuck your shit up or do you want to clean it up now? "; \
-		read choice; \
-		case $$choice in \
-			[Yy]* ) echo "bet, deleting your alembic shit ..."; rm -rf alembic/versions/*;; \
-			[Nn]* ) echo "Make up your fucking mind!"; exit 1;; \
-			* ) echo "What the fuck does that mean??"; exit 1;; \
-		esac; \
+		if [ -t 0 ]; then \
+			printf "❌ Nah bro, your alembic versions directory is not empty. You want to fuck your shit up or do you want to clean it up now? "; \
+			read choice; \
+			case $$choice in \
+				[Yy]* ) echo "bet, deleting your alembic shit ..."; rm -rf alembic/versions/*;; \
+				[Nn]* ) echo "Make up your fucking mind!"; exit 1;; \
+				* ) echo "What the fuck does that mean??"; exit 1;; \
+			esac; \
+		else \
+			echo "❌ Alembic versions directory is not empty. Run this command interactively or clean up manually."; \
+			exit 1; \
+		fi; \
 	fi
 	$(BIN)/alembic upgrade head > /dev/null
 	$(BIN)/alembic revision --autogenerate -m "initial schema" > /dev/null
