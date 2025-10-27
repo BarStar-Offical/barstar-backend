@@ -21,9 +21,13 @@ jobs:
       - name: Build and run tests in devcontainer
         id: devcontainer-test
         uses: devcontainers/ci@v0.3
+        env:
+          DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/test
+          REDIS_URL: redis://localhost:6379/0
         with:
           runCmd: |
-            make lint
+            export DATABASE_URL="postgresql+psycopg://postgres:postgres@localhost:5432/test"
+            export REDIS_URL="redis://localhost:6379/0"
             make test
 
       - name: Comment on failure for Copilot PRs
