@@ -28,6 +28,11 @@ jobs:
           runCmd: |
             export DATABASE_URL="postgresql+psycopg://postgres:postgres@localhost:5432/test"
             export REDIS_URL="redis://localhost:6379/0"
+            echo "Starting PostgreSQL and Redis services..."
+            docker compose up -d db redis
+            echo "Waiting for PostgreSQL to be healthy..."
+            timeout 60 bash -c 'until docker compose exec -T db pg_isready -U postgres; do sleep 2; done'
+            echo "Services are ready. Running tests..."
             make test
 
       - name: Comment on failure for Copilot PRs
