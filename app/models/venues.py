@@ -5,10 +5,11 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, func
-from sqlalchemy.dialects.postgresql import UUID, CITEXT
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
+from app.db.types import CaseInsensitiveText
 from app.models.operators import operator_venues
 
 if TYPE_CHECKING:  # pragma: no cover - aid static type analysis
@@ -45,7 +46,7 @@ class Venues(Base):
     country: Mapped[str | None] = mapped_column()
     website: Mapped[str | None] = mapped_column()
     phone_number: Mapped[str | None] = mapped_column()
-    email: Mapped[str | None] = mapped_column(CITEXT())
+    email: Mapped[str | None] = mapped_column(CaseInsensitiveText())
     capacity: Mapped[int | None] = mapped_column()
     indoor: Mapped[bool | None] = mapped_column()
     outdoor: Mapped[bool | None] = mapped_column()

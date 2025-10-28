@@ -6,10 +6,11 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, DateTime, Enum, ForeignKey, String, Table, func
-from sqlalchemy.dialects.postgresql import UUID, CITEXT
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
+from app.db.types import CaseInsensitiveText
 
 if TYPE_CHECKING:  # pragma: no cover - aid static type analysis
     from app.models.venues import Venues
@@ -66,7 +67,7 @@ class Operators(Base):
         nullable=False,
         default=OperatorRole.STAFF,
     )
-    email: Mapped[str] = mapped_column(CITEXT(), unique=True, index=True)
+    email: Mapped[str] = mapped_column(CaseInsensitiveText(), unique=True, index=True)
     full_name: Mapped[str] = mapped_column(String(length=255))
     phone_number: Mapped[str] = mapped_column()
     is_active: Mapped[bool] = mapped_column(default=True)

@@ -52,6 +52,18 @@ FastAPI service backed by PostgreSQL, Redis, and Alembic migrations. The goal is
 
 All commands assume the virtual environment located in `.venv`. Update the `Makefile` variables if you standardize on a different path.
 
+### Testing Database
+
+Pytest now targets a disposable PostgreSQL database so behaviour matches production. Ensure the compose `db` service (image `ghcr.io/barstar-offical/barstar-postgres-age:16`) is running before executing the suite:
+
+```bash
+docker compose -f deploy/docker-compose.yaml up db -d
+export TEST_DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/barstar_test
+pytest
+```
+
+The fixtures derive a temporary database from `TEST_DATABASE_URL`, create required extensions (e.g. `citext`), and drop the database when the test session exits.
+
 ## Database Workflow (Onboarding Cheat Sheet)
 
 1. **Model updates**  

@@ -4,7 +4,7 @@ from typing import Any
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
-from sqlalchemy import or_, select
+from sqlalchemy import or_, select, text
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db, get_task_queue
@@ -29,6 +29,18 @@ from app.schemas import VenuesCreate, VenuesUpdate
 from app.services import TaskQueue
 
 router = APIRouter(prefix="/api/v1")
+
+
+@router.get("/health", tags=["health"])
+def healthcheck(db: Session = Depends(get_db)) -> dict[str, Any]:
+    try:
+        db.execute(text("SELECT 1"))
+    except Exception as exc:  # pragma: no cover - defensive branch
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="database_unavailable",
+        ) from exc
+    return {"status": "ok"}
 
 @router.post(
     "/users",
