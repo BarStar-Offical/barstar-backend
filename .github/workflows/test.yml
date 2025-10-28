@@ -18,6 +18,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Start PostgreSQL and Redis services
+        run: |
+          docker compose up -d --wait db redis
+          echo "Services are ready"
+
       - name: Build and run tests in devcontainer
         id: devcontainer-test
         uses: devcontainers/ci@v0.3
@@ -28,9 +33,6 @@ jobs:
           runCmd: |
             export DATABASE_URL="postgresql+psycopg://postgres:postgres@localhost:5432/test"
             export REDIS_URL="redis://localhost:6379/0"
-            echo "Starting PostgreSQL and Redis services..."
-            docker compose up -d --wait db redis
-            echo "Services are ready. Running tests..."
             make test
 
       - name: Comment on failure for Copilot PRs
