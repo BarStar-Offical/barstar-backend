@@ -13,11 +13,16 @@ fi
 # Option A: prepend venv bin to PATH so bare commands work
 export PATH="${VENV}/bin:${PATH}"
 
-read -rp "Do you want to start the Barstar backend server now? (y/n) " ans
-if [[ "${ans,,}" == "y" || "${ans,,}" == "yes" ]]; then
-	echo "🚀 Starting Barstar backend server..."
-	cd "${REPO_ROOT}"
-	exec docker compose up --build -d
+# Skip interactive prompt in CI or non-interactive environments
+if [[ -t 0 ]]; then
+	read -rp "Do you want to start the Barstar backend server now? (y/n) " ans
+	if [[ "${ans,,}" == "y" || "${ans,,}" == "yes" ]]; then
+		echo "🚀 Starting Barstar backend server..."
+		cd "${REPO_ROOT}"
+		exec docker compose up --build -d
+	else
+		echo "ℹ️  Skipping backend server startup."
+	fi
 else
-	echo "ℹ️  Skipping backend server startup."
+	echo "ℹ️  Non-interactive environment detected. Skipping backend server startup."
 fi

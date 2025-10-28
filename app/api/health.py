@@ -19,4 +19,4 @@ def healthcheck(db: Session = Depends(get_db)) -> dict[str, Any]:
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="database_unavailable",
         ) from exc
-    return {"status": "ok"}    return {"status": "ok"}
+    return {"status": "ok"}

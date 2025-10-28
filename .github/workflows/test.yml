@@ -1,0 +1,49 @@
+name: Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build and run tests in devcontainer
+        id: devcontainer-test
+        uses: devcontainers/ci@v0.3
+        env:
+          DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/test
+          REDIS_URL: redis://localhost:6379/0
+        with:
+          runCmd: |
+            export DATABASE_URL="postgresql+psycopg://postgres:postgres@localhost:5432/test"
+            export REDIS_URL="redis://localhost:6379/0"
+            make test
+
+      - name: Comment on failure for Copilot PRs
+        if: failure() && github.event_name == 'pull_request' && startsWith(github.head_ref, 'copilot/')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `@copilot The CI workflow has failed. Please investigate and fix the issues.
+            
+            **Workflow run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            **Note:** This is an automated message. If the problem is complex or requires human oversight, please stop and request help to avoid infinite loops.`;
+            
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
