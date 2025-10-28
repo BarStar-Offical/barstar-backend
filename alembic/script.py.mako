@@ -11,6 +11,8 @@ from alembic import op
 import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql
+
+
 ${imports if imports else ""}
 
 # revision identifiers, used by Alembic.
@@ -21,8 +23,14 @@ depends_on: Union[str, Sequence[str], None] = ${repr(depends_on)}
 
 def upgrade() -> None:
     """Upgrade schema."""
-    op.execute("CREATE EXTENSION IF NOT EXISTS postgis")
-    op.execute("CREATE EXTENSION IF NOT EXISTS age")
+    bind = op.get_bind()
+    for extension in ("postgis", "age", "citext"):
+        bind.exec_driver_sql(f"CREATE EXTENSION IF NOT EXISTS {extension}")
+    bind = op.get_bind()
+    status_enum = sa.Enum(name='statusenum')
+    status_enum.drop(bind, checkfirst=True)
+    operator_role_enum = sa.Enum(name='operatorrole')
+    operator_role_enum.drop(bind, checkfirst=True)
     ${upgrades if upgrades else "pass"}
 
 

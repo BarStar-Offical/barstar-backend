@@ -2,16 +2,12 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime, timezone
-
-from citext import CIText
 from sqlalchemy import DateTime, func
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, CITEXT
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 from app.models.followers import Followers
-
-CIText.cache_ok = True  # type: ignore[attr-defined]
 
 
 class Users(Base):
@@ -22,7 +18,7 @@ class Users(Base):
         primary_key=True,
         default=uuid.uuid4,
     )
-    email: Mapped[CIText] = mapped_column(CIText(), unique=True, index=True)
+    email: Mapped[str] = mapped_column(CITEXT(), unique=True, index=True)
     full_name: Mapped[str] = mapped_column(default="")
     oauth_provider: Mapped[str] = mapped_column(default="local")
     oauth_provider_id: Mapped[str] = mapped_column(
