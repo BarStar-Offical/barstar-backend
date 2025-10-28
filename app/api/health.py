@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_db
 
-router = APIRouter(prefix="/api/v1")
+router = APIRouter()
 
 @router.get("/health", tags=["health"])
 def healthcheck(db: Session = Depends(get_db)) -> dict[str, Any]:
