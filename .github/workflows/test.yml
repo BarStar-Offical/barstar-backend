@@ -18,6 +18,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Start PostgreSQL and Redis services
+        run: |
+          cp .env.example .env
+          docker compose up -d --wait db redis
+          echo "Services are ready"
+
       - name: Build and run tests in devcontainer
         id: devcontainer-test
         uses: devcontainers/ci@v0.3
