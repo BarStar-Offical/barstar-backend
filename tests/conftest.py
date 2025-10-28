@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import uuid
+from abc import ABC, abstractmethod
 from collections.abc import Generator
 from typing import Any
 
@@ -17,6 +18,43 @@ from app.db.base import Base
 from app.main import create_app
 
 APITestContext = tuple[TestClient, sessionmaker[Session], list[tuple[str, dict[str, Any]]]]
+
+
+class TestBase(ABC):
+    __test__ = False
+
+    client: TestClient
+    session_factory: sessionmaker[Session]
+    events: list[tuple[str, dict[str, Any]]]
+
+    @pytest.fixture(autouse=True)
+    def _setup(self, api_app: APITestContext) -> None:
+        self.client, self.session_factory, self.events = api_app
+
+    @abstractmethod
+    def test_create(self) -> None:
+        pass
+
+    @abstractmethod
+    def test_delete(self) -> None:
+        pass
+
+    @abstractmethod
+    def test_update(self) -> None:
+        pass
+
+    @abstractmethod
+    def test_read(self) -> None:
+        pass
+
+    @abstractmethod
+    def test_create_conflict(self) -> None:
+        pass
+
+    @abstractmethod
+    def test_list(self) -> None:
+        pass
+
 
 
 @pytest.fixture(scope="session")
@@ -106,3 +144,5 @@ def api_app(test_database_url: str) -> Generator[APITestContext, None, None]:
         Base.metadata.drop_all(bind=engine)
         engine.dispose()
         engine.dispose()
+
+

@@ -4,11 +4,10 @@ import uuid
 from datetime import datetime, timezone
 
 from sqlalchemy import DateTime, func
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, CITEXT
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
-from app.db.types import CaseInsensitiveText
 from app.models.followers import Followers
 
 
@@ -20,7 +19,7 @@ class Users(Base):
         primary_key=True,
         default=uuid.uuid4,
     )
-    email: Mapped[str] = mapped_column(CaseInsensitiveText(), unique=True, index=True)
+    email: Mapped[str] = mapped_column(CITEXT(), unique=True, index=True)
     full_name: Mapped[str] = mapped_column(default="")
     oauth_provider: Mapped[str] = mapped_column(default="local")
     oauth_provider_id: Mapped[str] = mapped_column(
@@ -57,4 +56,4 @@ class Users(Base):
         secondaryjoin=id == Followers.follower_id,
         back_populates="following",
     )
-    )
+

@@ -5,11 +5,10 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, func
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, CITEXT
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
-from app.db.types import CaseInsensitiveText
 from app.models.operators import operator_venues
 
 if TYPE_CHECKING:  # pragma: no cover - aid static type analysis
@@ -37,7 +36,7 @@ class Venues(Base):
     # calculations and geometry for boundary calculations.
     coordinates: Mapped[str] = mapped_column(default="POINT(0 0)")
     area: Mapped[str | None] = mapped_column(default="POLYGON((0 0,0 0,0 0,0 0))")
-    name: Mapped[str] = mapped_column()
+    name: Mapped[str] = mapped_column(unique=True)
     description: Mapped[str | None] = mapped_column()
     address: Mapped[str | None] = mapped_column()
     city: Mapped[str | None] = mapped_column()
@@ -46,7 +45,7 @@ class Venues(Base):
     country: Mapped[str | None] = mapped_column()
     website: Mapped[str | None] = mapped_column()
     phone_number: Mapped[str | None] = mapped_column()
-    email: Mapped[str | None] = mapped_column(CaseInsensitiveText())
+    email: Mapped[str | None] = mapped_column(CITEXT())
     capacity: Mapped[int | None] = mapped_column()
     indoor: Mapped[bool | None] = mapped_column()
     outdoor: Mapped[bool | None] = mapped_column()

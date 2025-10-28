@@ -50,12 +50,7 @@ class VenuesBase(BaseModel):
 
 class VenuesCreate(VenuesBase):
     """Properties to receive on Venues creation."""
-
-    name: str
-    email: EmailStr
-    owner_id: uuid.UUID
-    experience_points: int
-
+    pass
 
 class VenuesUpdate(BaseModel):
     """Properties to receive on Venues update."""

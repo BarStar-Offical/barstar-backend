@@ -17,12 +17,12 @@ class OperatorRole(str, enum.Enum):
 class OperatorsBase(BaseModel):
     """Shared properties across operator schemas."""
 
-    role: OperatorRole = OperatorRole.STAFF
+    role: OperatorRole
     email: EmailStr
     full_name: str
-    phone_number: str | None = None
-    venue_ids: list[UUID] = Field(default_factory=list)
-    is_active: bool = True
+    phone_number: str | None
+    venue_ids: list[UUID]
+    is_active: bool
 
 
 class OperatorsCreate(OperatorsBase):
@@ -32,12 +32,12 @@ class OperatorsCreate(OperatorsBase):
 class OperatorsUpdate(BaseModel):
     """Payload accepted when updating an operator."""
 
-    role: OperatorRole | None = None
-    email: EmailStr | None = None
-    full_name: str | None = None
-    phone_number: str | None = None
-    venue_ids: list[UUID] | None = None
-    is_active: bool | None = None
+    role: OperatorRole | None
+    email: EmailStr | None
+    full_name: str | None
+    phone_number: str | None
+    venue_ids: list[UUID] | None
+    is_active: bool | None
 
 
 class OperatorsRead(OperatorsBase):

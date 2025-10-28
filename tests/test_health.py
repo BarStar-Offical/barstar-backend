@@ -19,7 +19,7 @@ def test_health_endpoint_returns_ok() -> None:
 
 def _override_get_db() -> Generator[object, None, None]:
     class _Session:
-        def execute(self, *_args, **_kwargs) -> None:
+        def execute(self, *_args, **_kwargs) -> None: # type: ignore
             return None
 
     yield _Session()
